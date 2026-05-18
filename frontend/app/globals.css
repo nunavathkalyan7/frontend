@@ -1,0 +1,71 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f7fb;
+}
+
+
+/* MAIN */
+
+.mainContainer{
+    width:100%;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    padding:20px;
+    gap:20px;
+}
+
+
+/* HEADER */
+
+.topHeader{
+    width:100%;
+}
+
+
+/* BODY */
+
+.bodyContainer{
+    flex:1;
+    display:flex;
+    gap:20px;
+}
+
+
+/* LEFT */
+
+.leftSection{
+    width:25%;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+
+/* RIGHT */
+
+.rightSection{
+    width:75%;
+    height:100%;
+}
+
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+    .bodyContainer{
+        flex-direction:column;
+    }
+
+    .leftSection,
+    .rightSection{
+        width:100%;
+    }
+}

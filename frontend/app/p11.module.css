@@ -1,0 +1,187 @@
+.container{
+    display:flex;
+    height:100vh;
+    overflow:hidden;
+    background:#f3f4f6;
+}
+
+/* LEFT PANEL */
+
+.leftPanel{
+    width:34%;
+    background:#f8fafc;
+    border-right:1px solid #d1d5db;
+    padding:20px;
+}
+
+.title{
+    font-size:28px;
+    font-weight:bold;
+    color:#0f172a;
+    margin-bottom:30px;
+}
+
+/* CARD */
+
+.card{
+    background:#f1f5f9;
+    border:1px solid #cbd5e1;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:25px;
+}
+
+.card h2{
+    font-size:22px;
+    margin-bottom:18px;
+    color:#000;
+}
+
+/* FILE INPUT */
+
+.fileInput{
+    margin-bottom:18px;
+}
+
+/* BUTTONS */
+
+.button{
+    background:#2563eb;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:15px;
+    transition:0.3s;
+}
+
+.button:hover{
+    background:#1d4ed8;
+}
+
+/* TEXT */
+
+.smallText{
+    margin-bottom:15px;
+    color:#334155;
+    font-size:16px;
+}
+
+/* RIGHT PANEL */
+
+.rightPanel{
+    width:66%;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+}
+
+/* CHAT HEADER */
+
+.chatHeader{
+    background:#f1f5f9;
+    border-radius:10px;
+    padding:18px;
+    margin-bottom:18px;
+    border:1px solid #e5e7eb;
+}
+
+.chatHeader h2{
+    font-size:24px;
+    color:#000;
+}
+
+/* CHAT BOX */
+
+.chatBox{
+    flex:1;
+    background:#f8fafc;
+    border-radius:10px;
+    border:1px solid #e5e7eb;
+    padding:20px;
+    overflow-y:auto;
+}
+
+/* MESSAGE */
+
+.message{
+    max-width:70%;
+    padding:14px 18px;
+    border-radius:12px;
+    margin-bottom:18px;
+    line-height:1.5;
+    font-size:16px;
+}
+
+/* BOT */
+
+.bot{
+    background:#dbe1ea;
+    color:#000;
+}
+
+/* USER */
+
+.user{
+    background:#2563eb;
+    color:white;
+    margin-left:auto;
+}
+
+/* INPUT AREA */
+
+.chatInputArea{
+    display:flex;
+    margin-top:15px;
+    gap:12px;
+}
+
+/* INPUT */
+
+.chatInput{
+    flex:1;
+    padding:14px;
+    border-radius:8px;
+    border:1px solid #cbd5e1;
+    outline:none;
+    font-size:15px;
+}
+
+.chatInput:focus{
+    border-color:#2563eb;
+}
+
+/* SEND BUTTON */
+
+.sendButton{
+    width:90px;
+    border:none;
+    background:#2563eb;
+    color:white;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.sendButton:hover{
+    background:#1d4ed8;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+    .container{
+        flex-direction:column;
+    }
+
+    .leftPanel,
+    .rightPanel{
+        width:100%;
+    }
+
+    .chatBox{
+        height:400px;
+    }
+}

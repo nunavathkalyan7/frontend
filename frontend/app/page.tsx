@@ -1,16 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import "./p11.css";
+
+import "./globals.css";
+
+import Header from "./components/header";
+import UploadSection from "./components/upload";
+import DownloadSection from "./components/download";
+import ChatBox from "./components/chatbox";
 
 export default function Home() {
 
-    const [file, setFile] = useState(null);
+    // =========================
+    // STATES
+    // =========================
 
-    const [outputFile, setOutputFile] = useState("");
+    // Uploaded File
+    const [file, setFile] = useState<File | null>(null);
 
+    // Backend Job ID
+    const [jobId, setJobId] = useState("");
+
+    // Chat Input
     const [message, setMessage] = useState("");
 
+    // Chat Messages
     const [chatMessages, setChatMessages] = useState([
         {
             sender: "bot",
@@ -19,14 +33,11 @@ export default function Home() {
     ]);
 
 
-    // Handle File Selection
-    const handleFileChange = (event) => {
 
-        setFile(event.target.files[0]);
-    };
+    // =========================
+    // UPLOAD FILE API
+    // =========================
 
-
-    // Upload File
     const uploadFile = async () => {
 
         if (!file) {
@@ -43,7 +54,7 @@ export default function Home() {
         try {
 
             const response = await fetch(
-                "http://127.0.0.1:8000/upload",
+                "http://192.168.75.155:8000/upload",
                 {
                     method: "POST",
                     body: formData
@@ -52,9 +63,12 @@ export default function Home() {
 
             const data = await response.json();
 
-            alert("File uploaded successfully");
+            console.log(data);
 
-            setOutputFile(data.output_file);
+            // Save backend job_id
+            setJobId(data.job_id);
+
+            alert("File uploaded successfully");
 
         } catch (error) {
 
@@ -65,65 +79,84 @@ export default function Home() {
     };
 
 
-    // Download Processed File
+
+    // =========================
+    // DOWNLOAD FILE
+    // =========================
+
     const downloadFile = () => {
 
-        if (!outputFile) {
+        if (!jobId) {
 
-            alert("No processed file available");
+            alert("No processed document available");
 
             return;
         }
 
         window.open(
-            `http://127.0.0.1:8000/download/${outputFile}`
+            `http://192.168.75.155:8000/docx/${jobId}`
         );
     };
 
 
-    // Send Chat Message
+
+    // =========================
+    // SEND CHAT MESSAGE
+    // =========================
+
     const sendMessage = async () => {
 
-        if (!message) return;
+        if (!message.trim()) return;
+
+        // Upload first check
+        if (!jobId) {
+
+            alert("Please upload document first");
+
+            return;
+        }
+
+        // Store current message
+        const currentMessage = message;
+
+        // Clear input instantly
+        setMessage("");
+
 
         // Add user message
         setChatMessages((prev) => [
             ...prev,
             {
                 sender: "user",
-                text: message
+                text: currentMessage
             }
         ]);
+
 
         try {
 
             const response = await fetch(
-                "http://127.0.0.1:8000/chat",
+
+                `http://192.168.75.155:8000/chat/${jobId}?question=${encodeURIComponent(currentMessage)}`,
+
                 {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-
-                    body: JSON.stringify({
-                        message: message
-                    })
+                    method: "GET"
                 }
             );
 
             const data = await response.json();
+
+            console.log(data);
+
 
             // Add bot reply
             setChatMessages((prev) => [
                 ...prev,
                 {
                     sender: "bot",
-                    text: data.reply
+                    text: data.answer
                 }
             ]);
-
-            setMessage("");
 
         } catch (error) {
 
@@ -132,105 +165,56 @@ export default function Home() {
     };
 
 
+
     return (
 
-        <div className="container">
-
-            {/* LEFT PANEL */}
-            <div className="left-panel">
-
-                <h1>Document AI Assistant</h1>
-
-                {/* Upload Section */}
-                <div className="upload-box">
-
-                    <h2>Upload Document</h2>
-
-                    <input
-                        type="file"
-                        onChange={handleFileChange}
-                    />
-
-                    <button onClick={uploadFile}>
-                        Upload File
-                    </button>
-
-                </div>
+        <div className="mainContainer">
 
 
-                {/* Processed File */}
-                <div className="processed-box">
+            {/* HEADER */}
 
-                    <h2>Processed Document</h2>
+            <div className="topHeader">
 
-                    <p>
-                        {
-                            outputFile
-                            ? outputFile
-                            : "Your processed file will appear here."
-                        }
-                    </p>
-
-                    <button onClick={downloadFile}>
-                        Download Processed File
-                    </button>
-
-                </div>
+                <Header />
 
             </div>
 
 
-            {/* RIGHT PANEL */}
-            <div className="right-panel">
 
-                <div className="chat-header">
+            {/* BODY */}
 
-                    <h2>Chat With Document</h2>
-
-                </div>
+            <div className="bodyContainer">
 
 
-                {/* Chat Messages */}
-                <div className="chat-box">
+                {/* LEFT SECTION */}
 
-                    {
-                        chatMessages.map((msg, index) => (
+                <div className="leftSection">
 
-                            <div
-                                key={index}
-                                className={
-                                    msg.sender === "user"
-                                    ? "message user"
-                                    : "message bot"
-                                }
-                            >
-
-                                {msg.text}
-
-                            </div>
-                        ))
-                    }
-
-                </div>
-
-
-                {/* Chat Input */}
-                <div className="chat-input-area">
-
-                    <input
-                        type="text"
-                        placeholder="Ask something about the document..."
-
-                        value={message}
-
-                        onChange={(e) =>
-                            setMessage(e.target.value)
-                        }
+                    <UploadSection
+                        file={file}
+                        setFile={setFile}
+                        uploadFile={uploadFile}
                     />
 
-                    <button onClick={sendMessage}>
-                        Send
-                    </button>
+                    <DownloadSection
+                        outputFile={jobId}
+                        downloadFile={downloadFile}
+                    />
+
+                </div>
+
+
+
+                {/* RIGHT SECTION */}
+
+                <div className="rightSection">
+
+                    <ChatBox
+                        chatMessages={chatMessages}
+                        message={message}
+                        setMessage={setMessage}
+                        sendMessage={sendMessage}
+                    />
 
                 </div>
 
