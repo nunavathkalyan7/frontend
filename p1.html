@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document AI Assistant</title>
+    <link rel="stylesheet" href="p1.css">
+    <script src="p1.js"></script>
+</head>
+<body>
+    <div class="h">
+
+    </div>
+
+
+
+    <div class="container">
+
+        <!-- Left Section -->
+        <div class="left-panel">
+
+            <h1>Document AI Assistant</h1>
+
+            <!-- Upload Box -->
+            <div class="upload-box">
+                <h2>Upload Document</h2>
+
+                <input type="file" id="fileInput">
+
+                <button id="uploadBtn">
+                    Upload File
+                </button>
+            </div>
+
+            <!-- Processed File -->
+            <div class="processed-box">
+                <h2>Processed Document</h2>
+
+                <p>Your processed file will appear here.</p>
+
+                <button id="downloadBtn">
+                    Download Processed File
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Right Section -->
+        <div class="right-panel">
+
+            <div class="chat-header">
+                <h2>Chat With Document</h2>
+            </div>
+
+            <!-- Chat Messages -->
+            <div class="chat-box" id="chatBox">
+
+                <div class="message bot">
+                    Hello! Upload a document and ask questions.
+                </div>
+
+            </div>
+
+            <!-- Chat Input -->
+            <div class="chat-input-area">
+
+                <input 
+                    type="text" 
+                    id="messageInput"
+                    placeholder="Ask something about the document..."
+                >
+
+                <button id="sendBtn">
+                    Send
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
