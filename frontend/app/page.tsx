@@ -1,13 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
 import "./globals.css";
-
-import Header from "./components/header";
-import UploadSection from "./components/upload";
-import DownloadSection from "./components/download";
-import ChatBox from "./components/chatbox";
 
 export default function Home() {
 
@@ -15,16 +9,12 @@ export default function Home() {
     // STATES
     // =========================
 
-    // Uploaded File
     const [file, setFile] = useState<File | null>(null);
 
-    // Backend Job ID
     const [jobId, setJobId] = useState("");
 
-    // Chat Input
     const [message, setMessage] = useState("");
 
-    // Chat Messages
     const [chatMessages, setChatMessages] = useState([
         {
             sender: "bot",
@@ -65,7 +55,6 @@ export default function Home() {
 
             console.log(data);
 
-            // Save backend job_id
             setJobId(data.job_id);
 
             alert("File uploaded successfully");
@@ -108,7 +97,6 @@ export default function Home() {
 
         if (!message.trim()) return;
 
-        // Upload first check
         if (!jobId) {
 
             alert("Please upload document first");
@@ -116,12 +104,9 @@ export default function Home() {
             return;
         }
 
-        // Store current message
         const currentMessage = message;
 
-        // Clear input instantly
         setMessage("");
-
 
         // Add user message
         setChatMessages((prev) => [
@@ -132,13 +117,10 @@ export default function Home() {
             }
         ]);
 
-
         try {
 
             const response = await fetch(
-
                 `http://192.168.75.155:8000/chat/${jobId}?question=${encodeURIComponent(currentMessage)}`,
-
                 {
                     method: "GET"
                 }
@@ -148,8 +130,7 @@ export default function Home() {
 
             console.log(data);
 
-
-            // Add bot reply
+            // Add bot response
             setChatMessages((prev) => [
                 ...prev,
                 {
@@ -166,6 +147,10 @@ export default function Home() {
 
 
 
+    // =========================
+    // UI
+    // =========================
+
     return (
 
         <div className="mainContainer">
@@ -175,7 +160,9 @@ export default function Home() {
 
             <div className="topHeader">
 
-                <Header />
+                <h1 className=" mainHeading">
+                    AI Assistant
+                </h1>
 
             </div>
 
@@ -190,16 +177,95 @@ export default function Home() {
 
                 <div className="leftSection">
 
-                    <UploadSection
-                        file={file}
-                        setFile={setFile}
-                        uploadFile={uploadFile}
-                    />
 
-                    <DownloadSection
-                        outputFile={jobId}
-                        downloadFile={downloadFile}
-                    />
+                    {/* UPLOAD SECTION */}
+
+                    <div className="card">
+
+                        <h2 className="heading">
+                            Upload Document
+                        </h2>
+
+                        <div className="uploadArea">
+
+                            <input
+                                type="file"
+                                id="fileUpload"
+                                className="fileInput"
+                                onChange={(e) =>
+                                    setFile(e.target.files?.[0] || null)
+                                }
+                            />
+
+                            <label
+                                htmlFor="fileUpload"
+                                className="uploadLabel"
+                            >
+                                Choose File
+                            </label>
+
+                            {
+                                file &&
+                                <p className="fileName">
+                                    {file.name}
+                                </p>
+                            }
+
+                        </div>
+
+                        <button
+                            className="button"
+                            onClick={uploadFile}
+                        >
+                            Upload File
+                        </button>
+
+                    </div>
+
+
+
+                    {/* DOWNLOAD SECTION */}
+
+                    <div className="card">
+
+                        <h2 className="heading">
+                            Processed Document
+                        </h2>
+
+                        <p className="description">
+                            Download your processed document after upload.
+                        </p>
+
+                        {
+                            jobId ? (
+
+                                <div className="fileBox">
+
+                                    <p className="fileName">
+                                        {jobId}
+                                    </p>
+
+                                </div>
+
+                            ) : (
+
+                                <div className="noFile">
+
+                                    No processed document available
+
+                                </div>
+                            )
+                        }
+
+                        <button
+                            className="button"
+                            onClick={downloadFile}
+                            disabled={!jobId}
+                        >
+                            Download File
+                        </button>
+
+                    </div>
 
                 </div>
 
@@ -209,12 +275,83 @@ export default function Home() {
 
                 <div className="rightSection">
 
-                    <ChatBox
-                        chatMessages={chatMessages}
-                        message={message}
-                        setMessage={setMessage}
-                        sendMessage={sendMessage}
-                    />
+
+                    {/* CHAT CONTAINER */}
+
+                    <div className="chatContainer">
+
+
+                        {/* CHAT HEADER */}
+
+                        <div className="chatHeader">
+
+                            <h2>
+                                Chat With Document
+                            </h2>
+
+                        </div>
+
+
+
+                        {/* CHAT MESSAGES */}
+
+                        <div className="chatBox">
+
+                            {
+                                chatMessages.map((msg, index) => (
+
+                                    <div
+                                        key={index}
+                                        className={`message ${
+                                            msg.sender === "user"
+                                                ? "user"
+                                                : "bot"
+                                        }`}
+                                    >
+                                        {msg.text}
+                                    </div>
+
+                                ))
+                            }
+
+                        </div>
+
+
+
+                        {/* CHAT INPUT */}
+
+                        <div className="chatInputArea">
+
+                            <input
+                                type="text"
+                                placeholder="Ask something about the document..."
+                                className="chatInput"
+                                value={message}
+                                onChange={(e) =>
+                                    setMessage(e.target.value)
+                                }
+
+                                onKeyDown={(e) => {
+
+                                    if (e.key === "Enter") {
+
+                                        e.preventDefault();
+
+                                        sendMessage();
+                                    }
+                                }}
+                            />
+
+                            <button
+                                className="sendButton"
+                                onClick={sendMessage}
+                            >
+                                Send
+                            </button>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
